@@ -15,6 +15,6 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
-		self.poll.PopulateBallet("music")
+		self.spi.SendSong("Shake It Off.wav", 45000)
 
 

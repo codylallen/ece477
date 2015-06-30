@@ -45,6 +45,25 @@ class Poll:
 		f.write(newLines)
 		f.close()
 
+	#####################################################################
+	#
+	#	CLEARS BALLET ON HOMEPAGE
+	#
+	#	Clears and generates a clean index.php ballet for votinng
+	#
+	#####################################################################
+
+	def CleanBallet(self):
+		# Get clean PHP file
+	    f = open(VOTING_CLEANPAGE, 'r')
+	    homepageStructure = f.read()
+	    f.close()
+
+	    # Write clean structure
+	    f = open(VOTING_HOMEPAGE, 'w')
+	    f.write(homepageStructure)
+	    f.close()
+
     #####################################################################
 	#
 	#	POPULATES POLL OPTIONS
@@ -66,15 +85,8 @@ class Poll:
 	    	cleanSong = re.match("(" + songDirectoryPath + "/)(.*)(.m4a)", song)
 	        cleanList.append(cleanSong.group(2))
 
-	    # Get clean PHP file
-	    f = open(VOTING_CLEANPAGE, 'r')
-	    homepageStructure = f.read()
-	    f.close()
-
-	    # Write clean structure
-	    f = open(VOTING_HOMEPAGE, 'w')
-	    f.write(homepageStructure)
-	    f.close()
+	    # Clean PHP file
+	    self.CleanBallet()
 
 	    # Write songs to list
 	    for song in cleanList:

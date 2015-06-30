@@ -32,9 +32,9 @@ class SPI():
 		if(len(listOfBytes) > SPI_MAXBLOCKSIZE):
 				r = spi.xfer2(listOfBytes[:SPI_MAXBLOCKSIZE])
 				listOfBytes = listOfBytes[SPI_MAXBLOCKSIZE + 1:]
-			else:
-				r = spi.xfer2(listOfBytes)
-				listOfBytes = []
+		else:
+			r = spi.xfer2(listOfBytes)
+			listOfBytes = []
 
 		return listOfBytes
 
@@ -50,34 +50,46 @@ class SPI():
 	#
 	#####################################################################
 
-	def Music_SendSong(self, title, speed):
+	def SendSong(self, filepath, speed):
 
-		# Read in file
-		f = open(title, 'rb')
-		bytes_read = f.read()
-		f.close()
+		# Get preped song data
+		bytes = self.PrepareSongData(filepath)
 
 		# GPIO setup
 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setwarnings(False)
 		GPIO.setup(GPIO_BUFFERFULL, GPIO.IN)
 
+		# Fill buffer
+		for init in range(SPI_BUFFERSIZE):
+			bytes = self.SendBytes(bytes, speed)
+		# Send data in chunks
+		while(len(bytes) > 0):
+			while(GPIO.input(GPIO_BUFFERFULL) == GPIO.LOW):
+				pass
+			bytes = self.SendBytes(bytes, speed)
+
+	#####################################################################
+	#
+	#	LOAD IN SONG DATA
+	#
+	#	Takes a file path and loads in the song data, preparing it for
+	#	SPI transfer
+	#
+	#####################################################################
+
+	def PrepareSongData(self, filepath):
+		# Read in file
+		f = open(filepath, 'rb')
+		bytes_read = f.read()
+		f.close()
+
 		# Convert read string to int representation
 		bytes = []
 		for byte in bytes_read:
 			bytes.append(ord(byte))
 
-		# S SPI object with configuations
-		spi.max_speed_hz = speed
+		return bytes
 
-		# Send data in chunks
-		print("Sending packets . . .")
-		print("Sending initial 4 blocks")
-		for init in range(SPI_BUFFERSIZE):
-			bytes = self.SendBytes(bytes, speed)
-		print("4 blocks sent, waiting on line ")
-		while(len(bytes) > 0):
-			while(GPIO.input(GPIO_BUFFERFULL) == GPIO.LOW):
-				pass
-			bytes = self.SendBytes(bytes, speed)
+
 

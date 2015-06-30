@@ -1,13 +1,22 @@
 #!/usr/bin/python
 from constants import *
 import glob
+import MySQLdb
 import re
 import sys
 
 class Poll:
 
 	def __init__(self):
-		pass
+
+		# Estbalish connection to DB
+		self.db = MySQLdb.connect(host=DB_HOST,
+			user=DB_USER,
+			passwd=DB_PASSWORD,
+			db=DB_NAME)
+
+		# Database currsor for executing
+		self.cur = self.db.cursor()
 
 	#####################################################################
 	#
@@ -24,6 +33,7 @@ class Poll:
 		targetForNewChoice2 = "<input type=\"submit\" value=\"Submit\" />"
 		targetForNewChoice = targetForNewChoice1 + targetForNewChoice2
 		LF = "\n"
+		songTitle = " " + songTitle
 
 
 		# Get current PHP file
@@ -47,7 +57,7 @@ class Poll:
 
 	#####################################################################
 	#
-	#	CLEARS BALLET ON HOMEPAGE
+	#	CLEAR BALLET ON HOMEPAGE
 	#
 	#	Clears and generates a clean index.php ballet for votinng
 	#
@@ -66,7 +76,81 @@ class Poll:
 
     #####################################################################
 	#
-	#	POPULATES POLL OPTIONS
+	#	CLEAR ENTRIES IN SQL DB TABLE
+	#
+	#	Clears entries in the SQL DB table
+	#
+	#####################################################################
+
+	def ClearDbTable(self):
+		querey = "DELETE FROM " + DB_TABLE
+
+		# SQL querey for song coloumn
+		self.cur.execute(querey)
+
+		# Commit changes
+		self.db.commit()
+
+	#####################################################################
+	#
+	#	DELETE TARGET ENTRIES IN SQL DB TABLE
+	#
+	#	Deletes a tarticular song entry from SQL DB given the name
+	#
+	#####################################################################
+
+	def DeleteEntries(self, target):
+		querey = "DELETE FROM " + DB_TABLE + " WHERE song = " + target
+
+		# SQL querey for song coloumn
+		self.cur.execute(querey)
+
+		# Commit changes
+		self.db.commit()
+
+	#####################################################################
+	#
+	#	RETRIEVE VOTES FROM DATABASE
+	#
+	#	Returns list of votes from MySQL database
+	#
+	#####################################################################
+
+	def GetData(self):
+		querey = "SELECT song FROM " + DB_TABLE
+
+		# SQL querey for song coloumn
+		self.cur.execute(querey)
+
+		# Collect song titles
+		listOfSongs = []
+		for row in self.cur.fetchall() :
+			listOfSongs.append(row[0])
+
+		return listOfSongs
+
+	#####################################################################
+	#
+	#	OBTAIN TOP VOTED ITEM
+	#
+	#	Returns the top voted item in the database
+	#
+	#####################################################################
+
+	def GetTopItem(self):
+		querey = "SELECT song FROM " + DB_TABLE + " GROUP BY song ORDER BY COUNT(*) DESC LIMIT 1";
+
+		# SQL querey for song coloumn
+		self.cur.execute(querey)
+
+		# Extract song
+		row = self.cur.fetchall()
+
+		return row[0][0]
+
+    #####################################################################
+	#
+	#	POPULATE POLL OPTIONS
 	#
 	#	Adds all songs pass to the method in a list, rewriting the
 	#	existing options in index.php
@@ -74,20 +158,22 @@ class Poll:
 	#####################################################################
 
 	def PopulateBallet(self, songDirectoryPath):
+		targetCleanSong = "(" + songDirectoryPath + "/)(.*)(.wav)"
+		targetGroup = 2
+		targetFiles = songDirectoryPath + "/*.wav"
 
-	    # Get list of songs in directory path
-	    listOfFiles = glob.glob(songDirectoryPath + "/*.m4a")
-	    print(listOfFiles)
+		# Get list of songs in directory path
+		listOfFiles = glob.glob(targetFiles)
 
-	    # Clean list
-	    cleanList = []
-	    for song in listOfFiles:
-	    	cleanSong = re.match("(" + songDirectoryPath + "/)(.*)(.m4a)", song)
-	        cleanList.append(cleanSong.group(2))
+		# Clean list
+		cleanList = []
+		for song in listOfFiles:
+			cleanSong = re.match(targetCleanSong, song)
+			cleanList.append(cleanSong.group(targetGroup ))
 
-	    # Clean PHP file
-	    self.CleanBallet()
+		# Clean PHP file
+		self.CleanBallet()
 
-	    # Write songs to list
-	    for song in cleanList:
-	    	self.AddSong(song)
+		# Write songs to list
+		for song in cleanList:
+			self.AddSong(song)

@@ -15,6 +15,28 @@ class SPI():
 
 	#####################################################################
 	#
+	#	LOAD IN SONG DATA
+	#
+	#	Takes a file path and loads in the song data, preparing it for
+	#	SPI transfer
+	#
+	#####################################################################
+
+	def PrepareSongData(self, filepath):
+		# Read in file
+		f = open(filepath, 'rb')
+		bytes_read = f.read()
+		f.close()
+
+		# Convert read string to int representation
+		bytes = []
+		for byte in bytes_read:
+			bytes.append(ord(byte))
+
+		return bytes
+
+	#####################################################################
+	#
 	#	SEND LIST OF BYTES VIA SPI
 	#
 	#	Sends a list of bytes via SPI, preventing a stack overflow,
@@ -68,28 +90,3 @@ class SPI():
 			while(GPIO.input(GPIO_BUFFERFULL) == GPIO.LOW):
 				pass
 			bytes = self.SendBytes(bytes, speed)
-
-	#####################################################################
-	#
-	#	LOAD IN SONG DATA
-	#
-	#	Takes a file path and loads in the song data, preparing it for
-	#	SPI transfer
-	#
-	#####################################################################
-
-	def PrepareSongData(self, filepath):
-		# Read in file
-		f = open(filepath, 'rb')
-		bytes_read = f.read()
-		f.close()
-
-		# Convert read string to int representation
-		bytes = []
-		for byte in bytes_read:
-			bytes.append(ord(byte))
-
-		return bytes
-
-
-

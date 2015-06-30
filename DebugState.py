@@ -15,6 +15,7 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
-		self.spi.SendSong("Shake It Off.wav", 45000)
+		results = self.poll.GetTopItem()
+		print(results)
 
 

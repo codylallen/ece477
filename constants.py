@@ -27,3 +27,10 @@ VOTING_HOMEPAGE = VOTING_DEV
 # Poll choice template in PHP syntax
 PHP_CHOICETEMPLATE = "<p><input type=\"radio\" name=\"song\" value=\"TITLE\"/>TITLE</p>"
 
+# SQL Database Information
+DB_HOST = "localhost"
+DB_USER = "root"
+DB_PASSWORD = "DemoDJ2015"
+DB_NAME = "learning"
+DB_TABLE = "test3"
+

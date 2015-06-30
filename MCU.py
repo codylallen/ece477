@@ -5,11 +5,18 @@ from wifi import Cell, Scheme
 import RPi.GPIO as GPIO
 import sys
 import re
+from constants import *
+import glob
 
-def Music_SendSong(title):
-    speed = int(20000)
+# Make changes live vs dev
+VOTING_HOMEPAGE = VOTING_DEV
 
-    spi_block_size = 4096
+#####################################################################
+
+def Music_SendSong(title, speed):
+    speed = int(speed)
+
+    spi_block_size = SPI_MAXBLOCKSIZE
     
     # Read in file
     f = open(title, 'rb')
@@ -19,7 +26,7 @@ def Music_SendSong(title):
     # GPIO setup
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
-    GPIO.setup(11, GPIO.IN)
+    GPIO.setup(GPIO_BUFFERFULL, GPIO.IN)
          
     # Convert read string to int representation
     bytes = []
@@ -34,56 +41,96 @@ def Music_SendSong(title):
     # Send data in chunks
     print("Sending packets . . .")
     print("Sending initial 4 blocks")
-    for init in range(4):
-    	if(len(bytes) > 4096):
-            r = spi.xfer2(bytes[:4096])
-            bytes = bytes[4097:]
+    for init in range(SPI_BUFFERSIZE):
+    	if(len(bytes) > SPI_MAXBLOCKSIZE):
+            r = spi.xfer2(bytes[:SPI_MAXBLOCKSIZE])
+            bytes = bytes[SPI_MAXBLOCKSIZE + 1:]
         else:
             r = spi.xfer2(bytes)
             bytes = []
     print("4 blocks sent, waiting on line ")
     while(len(bytes) > 0):
-        while(GPIO.input(11) == GPIO.LOW):
+        while(GPIO.input(GPIO_BUFFERFULL) == GPIO.LOW):
         	pass
         #print("Pin went high")
-        if(len(bytes) > 4096):
-            r = spi.xfer2(bytes[:4096])
-            bytes = bytes[4097:]
+        if(len(bytes) > SPI_MAXBLOCKSIZE):
+            r = spi.xfer2(bytes[:SPI_MAXBLOCKSIZE])
+            bytes = bytes[SPI_MAXBLOCKSIZE + 1:]
         else:
             r = spi.xfer2(bytes)
             bytes = []
     spi.close()
 
+#####################################################################
+
 def WIFI_scanForNetworks():
-    cells = Cell.all('wlan0')
+    cells = Cell.all(WIRELESS)
     # Saved Wifi Networks
     #schemes = list(Scheme.all())
 
     return cells
 
+#####################################################################
+
 def Voting_AddSong(songTitle, location):
+    target = str(location) + '"/>.*</p>'
+    replaceTarget = '>.*<'
+    replaceContent = '>' + songTitle + '<'
+
     # Get current PHP file
-    f = open('index.php', 'r')
+    f = open(VOTING_HOMEPAGE, 'r')
     readLines = f.read()
     f.close()
 
     # Find title locations
-    result = re.findall('value=.*</p>', readLines)
-    print(result)
+    result = re.findall(target, readLines)
+    result = re.sub(replaceTarget, replaceContent, result[0])
 
     # Insert title at location
-    newLines = readLines
+    newLines = re.sub(target, result, readLines)
 
     # Rewrite file
-    #f = open('index.php', 'w')
+    f = open(VOTING_HOMEPAGE, 'w')
+    f.write(newLines)
+    f.close()
+
+
+#####################################################################
+
+def Voting_PopulateBallet(songDirectoryPath):
+
+    # Get list of songs in directory path
+    listOfFiles = glob.glob(songDirectoryPath + "/*.m4a")
+    print(listOfFiles)
+
+    # Clean list
+    cleanList = []
+    for song in listOfFiles:
+        cleanSong = re.match("(" + songDirectoryPath + "/)(.*)(.m4a)", song)
+        cleanList.append(cleanSong.group(2))
+    print(cleanList)
+
+    # Generate PHP code for song list
+
+    
+    # Get current PHP file
+    #f = open(VOTING_HOMEPAGE, 'r')
+    #readLines = f.read()
+    #f.close()
+
+    # Replace choice list with selection
+    
+    # Rewrite file
+    #f = open(VOTING_HOMEPAGE, 'w')
     #f.write(newLines)
     #f.close()
 
+#####################################################################
 
 def Main():
     print("Staring MCU . . .")
 
-    Voting_AddSong("dummy song", 3);
+    Voting_PopulateBallet("music")
     
     print("Exiting MCU. . .")
 

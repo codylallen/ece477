@@ -14,6 +14,16 @@ GPIO_BUFFERFULL = 11
 # Wireless driver name
 WIRELESS = 'wlan0'
 
-# Voting homepage
+# Voting homepage options (SET BELOW)
 VOTING_DEV = 'index.php'
 VOTING_LIVE = '/var/www/index.php'
+
+# Clean homepage path
+VOTING_CLEANPAGE = "clean.php"
+
+# Make changes live vs dev
+VOTING_HOMEPAGE = VOTING_DEV
+
+# Poll choice template in PHP syntax
+PHP_CHOICETEMPLATE = "<p><input type=\"radio\" name=\"song\" value=\"TITLE\"/>TITLE</p>"
+

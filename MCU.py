@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from constants import *
+from CONSTANTS import *
 from DebugState import *
 
 #####################################################################
@@ -10,7 +10,7 @@ def Main():
     debugState = DebugState()
 
     debugState.start()
-    
+
     print("Exiting MCU. . .")
 
 Main()

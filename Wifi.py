@@ -1,10 +1,10 @@
 #!/usr/bin/python
 from wifi import Cell, Scheme
-from constants import *
+from CONSTANTS import *
 import sys
 
 class Wifi():
-	
+
 	def __init__(self):
 		pass
 
@@ -24,3 +24,11 @@ class Wifi():
 	        if str(cell.ssid) not in listOfCells:
 	            listOfCells.append(str(cell.ssid))
 	    return(listOfCells)
+
+    #####################################################################
+	#
+	#	CONNECT TO WIFI NETWORK
+	#
+	#	Conects to a given wifi network, provided the name
+	#
+	#####################################################################

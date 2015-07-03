@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from constants import *
+from CONSTANTS import *
 import RPi.GPIO as GPIO
 import spidev
 import sys

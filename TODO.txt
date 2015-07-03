@@ -1,0 +1,14 @@
+DESIGN:
+- Determine control line communication system
+
+SYSTEM:
+- Determine how to load Python script at startup
+- Write initalize state
+- Write main state logic
+
+WIFI:
+- Wrtie connection method with failure detection
+- Write method for connecting to known Wifi schema
+
+SPI:
+- Write generic Display method that clocks out via SPI

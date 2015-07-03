@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from constants import *
+from CONSTANTS import *
 import glob
 import MySQLdb
 import re
@@ -27,13 +27,16 @@ class Poll:
 	#
 	#####################################################################
 
-	def AddSong(self, songTitle):
+	def AddSongToBallet(self, songTitle):
+		if not songTitle:
+			return
+
 		targetForSongTitle = "TITLE"
 		targetForNewChoice1 = ">\n"
 		targetForNewChoice2 = "<input type=\"submit\" value=\"Submit\" />"
-		targetForNewChoice = targetForNewChoice1 + targetForNewChoice2
+		targetForNewChoice = targetForNewChoice1 + ".*" + targetForNewChoice2
 		LF = "\n"
-		songTitle = " " + songTitle
+		songTitle = songTitle
 
 
 		# Get current PHP file
@@ -99,8 +102,11 @@ class Poll:
 	#
 	#####################################################################
 
-	def DeleteEntries(self, target):
-		querey = "DELETE FROM " + DB_TABLE + " WHERE song = " + target
+	def DeleteDbEntries(self, target):
+		if not target:
+			return
+
+		querey = "DELETE FROM " + DB_TABLE + " WHERE song = '" + target + "'"
 
 		# SQL querey for song coloumn
 		self.cur.execute(querey)
@@ -116,7 +122,7 @@ class Poll:
 	#
 	#####################################################################
 
-	def GetData(self):
+	def GetDbData(self):
 		querey = "SELECT song FROM " + DB_TABLE
 
 		# SQL querey for song coloumn
@@ -131,13 +137,13 @@ class Poll:
 
 	#####################################################################
 	#
-	#	OBTAIN TOP VOTED ITEM
+	#	OBTAIN TOP VOTED SONG
 	#
 	#	Returns the top voted item in the database
 	#
 	#####################################################################
 
-	def GetTopItem(self):
+	def GetDbTopSong(self):
 		querey = "SELECT song FROM " + DB_TABLE + " GROUP BY song ORDER BY COUNT(*) DESC LIMIT 1";
 
 		# SQL querey for song coloumn
@@ -146,7 +152,10 @@ class Poll:
 		# Extract song
 		row = self.cur.fetchall()
 
-		return row[0][0]
+		if not row:
+			return None
+		else:
+			return row[0][0]
 
     #####################################################################
 	#
@@ -157,10 +166,10 @@ class Poll:
 	#
 	#####################################################################
 
-	def PopulateBallet(self, songDirectoryPath):
-		targetCleanSong = "(" + songDirectoryPath + "/)(.*)(.wav)"
+	def PopulateBallet(self):
+		targetCleanSong = "(" + MUSICDIRECTORY + "/)(.*)(" + MUSICFILESTYPE + ")"
 		targetGroup = 2
-		targetFiles = songDirectoryPath + "/*.wav"
+		targetFiles = MUSICDIRECTORY + "/*" + MUSICFILESTYPE
 
 		# Get list of songs in directory path
 		listOfFiles = glob.glob(targetFiles)
@@ -176,4 +185,32 @@ class Poll:
 
 		# Write songs to list
 		for song in cleanList:
-			self.AddSong(song)
+			self.AddSongToBallet(song)
+
+	#####################################################################
+	#
+	#	REMOVE ONE SONG FROM THE EXISITING POLL OPTIONS
+	#
+	#	Removes one song from the exisiting poll (index.php)
+	#
+	#####################################################################
+
+	def RemoveSongFromBallet(self, songTitle):
+		if not songTitle:
+			return
+
+		target = "<p>.*" + songTitle + "</p>\n"
+		replacement = ""
+
+		# Get current PHP file
+		f = open(VOTING_HOMEPAGE, 'r')
+		readLines = f.read()
+		f.close()
+
+		# Remove title
+		newLines = re.sub(target, replacement, readLines)
+
+		# Rewrite file
+		f = open(VOTING_HOMEPAGE, 'w')
+		f.write(newLines)
+		f.close()

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from constants import *
+from CONSTANTS import *
 from Poll import *
 from SPI import *
 from Wifi import *
@@ -15,7 +15,11 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
-		results = self.poll.GetTopItem()
-		print(results)
+		song = self.poll.GetDbTopSong()
+		#print("Top song is " + song)
+		self.poll.RemoveSongFromBallet(song)
+		self.poll.DeleteDbEntries(song)
+
+
 
 

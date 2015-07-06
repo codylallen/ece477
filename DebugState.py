@@ -15,8 +15,12 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
+
+		#self.poll.CleanBallet()
+		#self.poll.PopulateBallet()
+
 		song = self.poll.GetDbTopSong()
-		#print("Top song is " + song)
+		print("Top song is " + song)
 		self.poll.RemoveSongFromBallet(song)
 		self.poll.DeleteDbEntries(song)
 

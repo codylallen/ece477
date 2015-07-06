@@ -1,15 +1,29 @@
 #!/usr/bin/python
 from CONSTANTS import *
 from DebugState import *
+from InitializeState import *
+from ResourceManager import *
+import sys
 
 #####################################################################
 
 def Main():
     print("Staring MCU . . .")
 
-    debugState = DebugState()
+    # Resource Wrapper to be passed to all states
+    resourceManager = ResourceManager()
 
-    debugState.start()
+    if(DEBUG):
+    	debugState = DebugState(resourceManager)
+    	debugState.start()
+    else:
+    	# Call Initalization State
+    	initializeState = InitializeState(resourceManager)
+    	firstTrack = initializeState.start()
+
+    	# Call Main State
+    	# Call main state with firstTrack
+
 
     print("Exiting MCU. . .")
 

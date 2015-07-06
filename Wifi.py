@@ -17,7 +17,7 @@ class Wifi():
 	#
 	#####################################################################
 
-	def scanForNetworks(self):
+	def ScanForNetworks(self):
 	    cells = Cell.all(WIRELESS)
 	    listOfCells = []
 	    for cell in cells:
@@ -32,3 +32,30 @@ class Wifi():
 	#	Conects to a given wifi network, provided the name
 	#
 	#####################################################################
+
+	def AttemptToConnectTo(self, targetName):
+		# Find network cells in range
+		cells = Cell.all(WIRELESS)
+
+		# Find targetCell based on targetName
+		for cell in cells:
+			if (str(cell.ssid) == targetName):
+				targetCell = cell
+
+		# Check if cell retrieval failed
+		if not targetCell:
+			return False
+
+		# Attempt Connection
+		#try:
+		scheme = Scheme.for_cell(WIRELESS, targetName, targetCell, "")
+		#except TypeError:
+		#	return False
+
+		#try:
+		scheme.save()
+		#except IOError:
+		#	return False
+
+		scheme.activate()
+		return True

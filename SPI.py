@@ -72,10 +72,10 @@ class SPI():
 	#
 	#####################################################################
 
-	def SendSong(self, filepath, speed):
+	def SendSong(self, track, speed):
 
 		# Get preped song data
-		bytes = self.PrepareSongData(filepath)
+		bytes = track.Data
 
 		# GPIO setup
 		GPIO.setmode(GPIO.BOARD)

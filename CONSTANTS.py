@@ -28,7 +28,7 @@ WIRELESS = 'wlan0'
 
 #####################################################################
 #
-#	WEBSITE CONFIGURATIONS
+#	POLL WEBSITE CONFIGURATIONS
 #
 #####################################################################
 
@@ -39,15 +39,12 @@ VOTING_LIVE = '/var/www/index.html'
 # Clean homepage path
 VOTING_CLEANPAGE = "clean.html"
 
-# Make changes live vs dev
-VOTING_HOMEPAGE = VOTING_LIVE
-
 # Poll choice template in PHP syntax
 PHP_CHOICETEMPLATE = "<p><input type=\"radio\" name=\"song\" value=\"TITLE\"/>TITLE</p>"
 
 #####################################################################
 #
-#	DATABASE CONFIGURATIONS
+#	POLL DATABASE CONFIGURATIONS
 #
 #####################################################################
 
@@ -69,3 +66,18 @@ MUSICDIRECTORY = "music"
 
 # Supported file type
 MUSICFILESTYPE = ".wav"
+
+#####################################################################
+#
+#	DEBUG CONFIGURATIONS
+#
+#####################################################################
+
+# Run Debug State
+DEBUG = True
+
+# Make webiste changes live vs dev (local)
+VOTING_HOMEPAGE = VOTING_LIVE
+
+# Preprocess Song Data
+PREPROCESS = False

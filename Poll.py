@@ -23,7 +23,7 @@ class Poll:
 	#	ADD ONE SONG TO THE EXISITING POLL OPTIONS
 	#
 	#	Adds one song to the exisiting poll, injecting the choice
-	#	into the index.php page
+	#	into the index.html page
 	#
 	#####################################################################
 
@@ -39,7 +39,7 @@ class Poll:
 		songTitle = songTitle
 
 
-		# Get current PHP file
+		# Get current HTML file
 		f = open(VOTING_HOMEPAGE, 'r')
 		readLines = f.read()
 		f.close()
@@ -62,12 +62,12 @@ class Poll:
 	#
 	#	CLEAR BALLET ON HOMEPAGE
 	#
-	#	Clears and generates a clean index.php ballet for votinng
+	#	Clears and generates a clean index.html ballet for votinng
 	#
 	#####################################################################
 
 	def CleanBallet(self):
-		# Get clean PHP file
+		# Get clean HTML file
 	    f = open(VOTING_CLEANPAGE, 'r')
 	    homepageStructure = f.read()
 	    f.close()
@@ -157,41 +157,29 @@ class Poll:
 		else:
 			return row[0][0]
 
+
     #####################################################################
 	#
 	#	POPULATE POLL OPTIONS
 	#
 	#	Adds all songs pass to the method in a list, rewriting the
-	#	existing options in index.php
+	#	existing options in index.html
 	#
 	#####################################################################
 
-	def PopulateBallet(self):
-		targetCleanSong = "(" + MUSICDIRECTORY + "/)(.*)(" + MUSICFILESTYPE + ")"
-		targetGroup = 2
-		targetFiles = MUSICDIRECTORY + "/*" + MUSICFILESTYPE
-
-		# Get list of songs in directory path
-		listOfFiles = glob.glob(targetFiles)
-
-		# Clean list
-		cleanList = []
-		for song in listOfFiles:
-			cleanSong = re.match(targetCleanSong, song)
-			cleanList.append(cleanSong.group(targetGroup ))
-
-		# Clean PHP file
+	def PopulateBallet(self, listOfSongs):
+		# Clean HTML file
 		self.CleanBallet()
 
 		# Write songs to list
-		for song in cleanList:
+		for song in listOfSongs:
 			self.AddSongToBallet(song)
 
 	#####################################################################
 	#
 	#	REMOVE ONE SONG FROM THE EXISITING POLL OPTIONS
 	#
-	#	Removes one song from the exisiting poll (index.php)
+	#	Removes one song from the exisiting poll (index.html)
 	#
 	#####################################################################
 
@@ -202,7 +190,7 @@ class Poll:
 		target = "<p>.*" + songTitle + "</p>\n"
 		replacement = ""
 
-		# Get current PHP file
+		# Get current HTML file
 		f = open(VOTING_HOMEPAGE, 'r')
 		readLines = f.read()
 		f.close()

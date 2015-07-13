@@ -35,7 +35,8 @@ class InitializeState:
 
 			# Send starting options
 			while not response:
-				response = self.spi.SendMenuChoices(STARTINGOPTIONS)
+				#response = self.spi.SendMenuChoices(STARTINGOPTIONS)
+				response = raw_input(STARTINGOPTIONS)
 
 			if (response == RANDOM):
 			 	return self.musicDatabase.GetRandomSongTitle()

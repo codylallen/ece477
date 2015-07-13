@@ -28,16 +28,19 @@ class Poll:
 	#####################################################################
 
 	def AddSongToBallet(self, songTitle):
-		if not songTitle:
-			return
-
 		targetForSongTitle = "TITLE"
+		targetForCleanSongTitle = "CLEAN"
 		targetForNewChoice1 = ">\n"
 		targetForNewChoice2 = "<input type=\"submit\" value=\"Submit\" />"
 		targetForNewChoice = targetForNewChoice1 + ".*" + targetForNewChoice2
 		LF = "\n"
-		songTitle = songTitle
+		cleanTitle = ""
 
+		if not songTitle:
+					return
+
+		# Clean title for sql syntax
+		cleanTitle = MySQLdb.escape_string(songTitle)
 
 		# Get current HTML file
 		f = open(VOTING_HOMEPAGE, 'r')
@@ -47,6 +50,7 @@ class Poll:
 		# Create new line to add
 		newLine = PHP_CHOICETEMPLATE
 		newLine = re.sub(targetForSongTitle, songTitle, newLine)
+		newLine = re.sub(targetForCleanSongTitle, cleanTitle, newLine)
 
 		replacementForNewChoice = targetForNewChoice1 + newLine + LF + targetForNewChoice2
 
@@ -105,6 +109,9 @@ class Poll:
 	def DeleteDbEntries(self, target):
 		if not target:
 			return
+
+		# Clean target syntax
+		target = MySQLdb.escape_string(target)
 
 		querey = "DELETE FROM " + DB_TABLE + " WHERE song = '" + target + "'"
 

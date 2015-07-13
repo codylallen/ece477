@@ -92,7 +92,6 @@ class SPI():
 	def SendStringMessage(self, stringMessage):
 		# Create list of int representation of string
 		stringMessageAsInt = map(ord, list(stringMessage))
-		print(stringMessageAsInt)
 
 		# Set GPIO signal low to communicate message data being sent
 		GPIO.output(GPIO_SENDMESSAGE, False)
@@ -117,7 +116,7 @@ class SPI():
 	#
 	#####################################################################
 
-	def SendSong(self, track, speed):
+	def SendSong(self, track, speed=SPI_DEFAULTSPEED):
 
 		# Get preped song data
 		bytes = track.Data
@@ -139,7 +138,7 @@ class SPI():
 	#
 	#####################################################################
 
-	def SendStringMessage(self, songTitle, songArtist=""):
+	def SendSongInfo(self, songTitle, songArtist=""):
 		stringToSend = ""
 
 		# Build strings to be displayed

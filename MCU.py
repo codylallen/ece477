@@ -2,6 +2,7 @@
 from CONSTANTS import *
 from DebugState import *
 from InitializeState import *
+from MainState import *
 from ResourceManager import *
 import sys
 
@@ -17,14 +18,14 @@ def Main():
     	debugState = DebugState(resourceManager)
     	debugState.start()
     else:
-    	# Call Initalization State
-    	initializeState = InitializeState(resourceManager)
-    	firstTrack = initializeState.start()
-        print(firstTrack)
+    	while(true):
+            # Call Initalization State
+        	initializeState = InitializeState(resourceManager)
+        	firstTrack = initializeState.start()
 
-    	# Call Main State
-    	# Call main state with firstTrack
-
+        	# Call Main State
+        	mainState = MainState(resourceManager)
+            status = mainState.start(firstTrack)
 
     print("\n\nExiting MCU. . .")
 

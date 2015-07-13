@@ -61,8 +61,17 @@ class MusicDatabase:
 		# Get songs currently in database
 		songTitles = self.GetSongsInDatabase()
 
+		# Determine number of songs left in database
+		numberOfSongs = len(songTitles)
+
+		# Check for empty list or if only single song left
+		if numberOfSongs == 0:
+			return None
+		elif numberOfSongs == 1:
+			return songTitles[0]
+
 		# Get random number (index)
-		randomNumer = random.randint(0, len(songTitles) - 1)
+		randomNumer = random.randint(0, numberOfSongs - 1)
 
 		return songTitles[randomNumer]
 
@@ -76,6 +85,17 @@ class MusicDatabase:
 
 	def GetSongsInDatabase(self):
 		return self.Tracks.keys()
+
+	#####################################################################
+	#
+	#	GET SONG TITLES IN DATABASE
+	#
+	#	Returns the list of songs currently in the database
+	#
+	#####################################################################
+
+	def IsEmpty(self):
+		return (len(self.GetSongsInDatabase()) == 0)
 
 	#####################################################################
 	#

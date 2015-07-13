@@ -78,7 +78,7 @@ VOTING_LIVE = '/var/www/index.html'
 VOTING_CLEANPAGE = "clean.html"
 
 # Poll choice template in PHP syntax
-PHP_CHOICETEMPLATE = "<p><input type=\"radio\" name=\"song\" value=\"TITLE\"/>TITLE</p>"
+PHP_CHOICETEMPLATE = "<p><input type=\"radio\" name=\"song\" value=\"CLEAN\"/>TITLE</p>"
 
 #####################################################################
 #

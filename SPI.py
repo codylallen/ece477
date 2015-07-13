@@ -10,30 +10,22 @@ class SPI():
 		self.spi = spidev.SpiDev()
 		self.spi.open(0,0)
 
+		# GPIO Setup
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setwarnings(False)
+
+		# Message sending signal pin calibration
+		GPIO.setup(GPIO_SENDMESSAGE, GPIO.OUT)
+		GPIO.output(GPIO_SENDMESSAGE, True)
+
+		# Buffer full signal pin setup
+		GPIO.setup(GPIO_BUFFERFULL, GPIO.IN)
+
+		# Ready to micro ready to send via SPI, GPIO signal
+		GPIO.setup(GPIO_RECEIVE, GPIO.IN)
+
 	def __del__(self):
 		self.spi.close
-
-	#####################################################################
-	#
-	#	LOAD IN SONG DATA
-	#
-	#	Takes a file path and loads in the song data, preparing it for
-	#	SPI transfer
-	#
-	#####################################################################
-
-	def PrepareSongData(self, filepath):
-		# Read in file
-		f = open(filepath, 'rb')
-		bytes_read = f.read()
-		f.close()
-
-		# Convert read string to int representation
-		bytes = []
-		for byte in bytes_read:
-			bytes.append(ord(byte))
-
-		return bytes
 
 	#####################################################################
 	#
@@ -60,6 +52,59 @@ class SPI():
 
 		return listOfBytes
 
+	#####################################################################
+	#
+	#	SEND A MENU CHOICES AND RECEIEVE RESPONSE VIA SPI
+	#
+	#	Utilizes the SendStringMessage function to send a menu of
+	#	choices and wait for to receive a response via SPI, based on
+	#	signal from designated GPIO pin. Returns the response received
+	#	via SPI. Returns None if bad receieve.
+	#
+	#	TODO: Add timeout feature, perhaps activated by arg
+	#			that starts when GPIO pin asserted
+	#
+	#####################################################################
+	def SendMenuChoices(self, menu, bytesToReceive=MENURESPONSESIZE):
+		response = ""
+
+		# Send menu of choices
+		self.SendStringMessage(menu)
+
+		# Wait for GPIO signal stating ready for micro to send response
+		# Receieve set number of byte(s) for response
+		while(GPIO.input(GPIO_RECEIVE) == GPIO.LOW):
+			pass
+		response = spi.readbytes(bytesToReceive)
+
+		return str(response)
+
+
+	#####################################################################
+	#
+	#	SEND A STRING VIA SPI
+	#
+	#	Provided a string, send entire string via SPI. Assumes
+	#	micro knows data is coming.
+	#
+	#####################################################################
+
+	def SendStringMessage(self, stringMessage):
+		# Create list of int representation of string
+		stringMessageAsInt = map(ord, list(stringMessage))
+		print(stringMessageAsInt)
+
+		# Set GPIO signal low to communicate message data being sent
+		GPIO.output(GPIO_SENDMESSAGE, False)
+
+		# Send message via spi
+		while(len(stringMessageAsInt) > 0):
+			stringMessageAsInt = self.SendBytes(stringMessageAsInt,
+				SPI_DEFAULTSPEED)
+
+		# Set GPIO signal back high
+		GPIO.output(GPIO_SENDMESSAGE, True)
+
 
 	#####################################################################
 	#
@@ -77,11 +122,6 @@ class SPI():
 		# Get preped song data
 		bytes = track.Data
 
-		# GPIO setup
-		GPIO.setmode(GPIO.BOARD)
-		GPIO.setwarnings(False)
-		GPIO.setup(GPIO_BUFFERFULL, GPIO.IN)
-
 		# Fill buffer
 		for init in range(SPI_BUFFERSIZE):
 			bytes = self.SendBytes(bytes, speed)
@@ -90,3 +130,23 @@ class SPI():
 			while(GPIO.input(GPIO_BUFFERFULL) == GPIO.LOW):
 				pass
 			bytes = self.SendBytes(bytes, speed)
+
+	#####################################################################
+	#
+	#	SEND A SONG INFO TO BE DISPLAYED
+	#
+	#	Uses send string method to send the song info
+	#
+	#####################################################################
+
+	def SendStringMessage(self, songTitle, songArtist=""):
+		stringToSend = ""
+
+		# Build strings to be displayed
+		stringToSend += NOWPLAYING_HEADER
+		stringToSend += NOWPLAYING_SONG + songTitle + '\n'
+		stringToSend += NOWPLAYING_ARTIST + songArtist + '\n'
+		stringToSend += NOWPLAYING_FOOTER
+
+		# Send string
+		self.SendStringMessage(stringToSend)

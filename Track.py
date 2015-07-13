@@ -54,6 +54,7 @@ class Track:
 
 		if PREPROCESS:
 			self.Data = self.PrepareSongData()
+			print("Preproccessed " + self.Title)
 
 	#####################################################################
 	#
@@ -71,8 +72,6 @@ class Track:
 		f.close()
 
 		# Convert read string to int representation
-		bytes = []
-		for byte in bytes_read:
-			bytes.append(ord(byte))
+		bytes = map(ord, bytes_read)
 
 		return bytes

@@ -3,9 +3,7 @@ from CONSTANTS import *
 from MusicDatabase import *
 from Poll import *
 from ResourceManager import *
-from SPI import *
 import sys
-from Wifi import *
 
 class InitializeState:
 
@@ -17,31 +15,37 @@ class InitializeState:
 		self.musicDatabase = resourceManager.musicDatabase
 
 	def start(self):
+		songsInDatabase = list()
 
 		# Populate ballet
-		self.poll.PopulateBallet(self.musicDatabase.Tracks.keys())
+		songsInDatabase = self.musicDatabase.GetSongsInDatabase()
+		self.poll.PopulateBallet(songsInDatabase)
 
 		# Clear database
 		self.poll.ClearDbTable()
 
 		# Establish WiFi connection
-		while(not self.EstablishWifiConnection()):
-			pass
+		# <!-- ASSUMING WIFI CONNECTION -->
+		#while(not self.EstablishWifiConnection()):
+		#	pass
 
 		while(True):
-			pass
-			# Send starting options
-			# response = self.spi.SendMenu(STARTINGOPTIONS)
+			response = None
+			songChoice = None
 
-			# if (response == RANDOM):
-				# Random method: pick random song
-				# return self.pickRandomTrack()
-			# else if (response == SPECIFIC):
-				# Specific Option: Send song options
-				# response = self.spi.SendMenu(self.musicDatabase.Tracks.keys())
-				# return response
-			# else:
-				# self.SendMessage(ERRORMESSAGE)
+			# Send starting options
+			while not response:
+				response = self.spi.SendMenuChoices(STARTINGOPTIONS)
+
+			if (response == RANDOM):
+			 	return self.musicDatabase.GetRandomSongTitle()
+
+			elif (response == SPECIFIC):
+				songChoice = self.spi.SendMenuChoices(songsInDatabase)
+				if songChoice in songsInDatabase:
+					return songChoice
+
+			self.spi.SendStringMessage(ERRORMESSAGE)
 
 	def EstablishWifiConnection(self):
 		# Search for WiFi
@@ -54,6 +58,6 @@ class InitializeState:
 
 
 		# Attempt connection (with failure procedure)
-		#return status
+		# return self.wifi.AttemptToConnectTo(name)
 
 

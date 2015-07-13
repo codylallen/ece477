@@ -4,6 +4,29 @@ import sys
 
 #####################################################################
 #
+#	INITIALIZATION MENU RESPONSES
+#
+#####################################################################
+
+# The prompt for starting options
+STARTINGOPTIONS = "Please select starting method\nSelect SPECIFIC song\nRANDOM\n"
+
+# Response indicating a random song should be picked to start
+# 	NOTE: This may need to change based on establish communication
+#			protocol. (i.e. may be changed to a number, etc.)
+RANDOM = "RANDOM"
+
+# Response indicating a specific song is to be selected to start
+# 	NOTE: This may need to change based on establish communication
+#			protocol. (i.e. may be changed to a number, etc.)
+SPECIFIC = "Select SPECIFIC song"
+
+# Error message when invalid response received
+ERRORMESSAGE = "Selection error, please try again"
+
+
+#####################################################################
+#
 #	SPI CONFIGURATIONS
 #
 #####################################################################
@@ -17,6 +40,18 @@ SPI_BUFFERSIZE = 4
 # GPIO pin for bufferfull
 GPIO_BUFFERFULL = 11
 
+# GPIO pin for signaling text to be displayed
+GPIO_SENDMESSAGE = 12
+
+# GPIO pin for response ready on SPI
+GPIO_RECEIVE = 13
+
+# SPI default speed
+SPI_DEFAULTSPEED = 5000
+
+# SPI number of bytes to be received for menu response
+MENURESPONSESIZE = 1
+
 #####################################################################
 #
 #	WIFI CONFIGURATIONS
@@ -25,6 +60,9 @@ GPIO_BUFFERFULL = 11
 
 # Wireless driver name
 WIRELESS = 'wlan0'
+
+# Wireless connection timeout
+CONNECTIONTIMEOUT = 20
 
 #####################################################################
 #
@@ -61,6 +99,12 @@ DB_TABLE = "test3"
 #
 #####################################################################
 
+# Now Playing Framework / Template
+NOWPLAYING_HEADER = "   DEMOCRATIC  DJ   \n"
+NOWPLAYING_SONG = "Title: "
+NOWPLAYING_ARTIST = "Artist: "
+NOWPLAYING_FOOTER = "~~~~~~~~~~~~~~~~~~~~"
+
 # Location of Music Files
 MUSICDIRECTORY = "music"
 
@@ -74,7 +118,7 @@ MUSICFILESTYPE = ".wav"
 #####################################################################
 
 # Run Debug State
-DEBUG = True
+DEBUG = False
 
 # Make webiste changes live vs dev (local)
 VOTING_HOMEPAGE = VOTING_LIVE

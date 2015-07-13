@@ -1,31 +1,11 @@
 ———————————————————DESIGN——————————————————
-- Determine control line communication system
-
 SYSTEM:
 - Determine how to load Python script at startup
 - Write initialize state
 - Write main state
 
-———————————————————MODULES——————————————————
-
-
+———————————————————LOW PRIORITY——————————————————
 WIFI:
 - Write connection method with failure detection
-
-SPI:
-- Write generic method receive via SPI as a master
-- Add pause detection to song sending
-- Confirm generic method of sending via SPI will work with display text
-
-POLL: 
-- Write method that pulls metadata off song
-- Write methods for creating song data maps 
-	(consider breaking out into separate module)
-
-GPIO:
-- Break out all GPIO configurations and controls to separate module
-- Write generic method for receiving via GPIO (with configurations)
-
-
-———————————————————LOW PRIORITY——————————————————
-- (WIFI) Write method for connecting to known Wifi schema
+- Establish error handling with correction procedures
+- If failed due to security, prompt, retry

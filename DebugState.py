@@ -18,10 +18,8 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
-		if self.wifi.AttemptToConnectTo('TP-LINK_5B71BC'):
-			print("Connection successful")
-		else:
-			print("Connection failed")
+		#self.spi.SendMenuChoices("Testing\nHey\nChris\nIt's working!")
+		self.spi.SendStringMessage("Test Track", "Cody ALlen")
 
 
 

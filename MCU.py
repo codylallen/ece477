@@ -8,7 +8,7 @@ import sys
 #####################################################################
 
 def Main():
-    print("Staring MCU . . .")
+    print("Staring MCU . . .\n\n")
 
     # Resource Wrapper to be passed to all states
     resourceManager = ResourceManager()
@@ -20,11 +20,12 @@ def Main():
     	# Call Initalization State
     	initializeState = InitializeState(resourceManager)
     	firstTrack = initializeState.start()
+        print(firstTrack)
 
     	# Call Main State
     	# Call main state with firstTrack
 
 
-    print("Exiting MCU. . .")
+    print("\n\nExiting MCU. . .")
 
 Main()

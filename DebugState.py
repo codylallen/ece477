@@ -19,7 +19,7 @@ class DebugState:
 	def start(self):
 		print("Starting Debug State . . .")
 		#self.spi.SendMenuChoices("Testing\nHey\nChris\nIt's working!")
-		self.spi.SendStringMessage("Test Track", "Cody ALlen")
+		self.spi.SendSongInfo("Test Track", "Cody Allen")
 
 
 

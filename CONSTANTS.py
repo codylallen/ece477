@@ -118,7 +118,7 @@ MUSICFILESTYPE = ".wav"
 #####################################################################
 
 # Run Debug State
-DEBUG = False
+DEBUG = True
 
 # Make webiste changes live vs dev (local)
 VOTING_HOMEPAGE = VOTING_LIVE

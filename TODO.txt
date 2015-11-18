@@ -1,7 +1,6 @@
 ———————————————————DESIGN——————————————————
 SYSTEM:
 - Determine how to load Python script at startup
-- Write main state
 
 ———————————————————LOW PRIORITY——————————————————
 WIFI:

@@ -44,7 +44,4 @@ class MainState:
 				currentSong = self.musicDatabase.GetRandomSongTitle()
 
 
-		# Closing procedure
-
-
 

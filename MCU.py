@@ -20,11 +20,11 @@ def Main():
     else:
     	while(true):
             # Call Initalization State
-        	initializeState = InitializeState(resourceManager)
-        	firstTrack = initializeState.start()
+            initializeState = InitializeState(resourceManager)
+            firstTrack = initializeState.start()
 
-        	# Call Main State
-        	mainState = MainState(resourceManager)
+            # Call Main State
+            mainState = MainState(resourceManager)
             status = mainState.start(firstTrack)
 
     print("\n\nExiting MCU. . .")

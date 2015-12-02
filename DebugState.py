@@ -20,12 +20,11 @@ class DebugState:
 
 	def start(self):
 		print("Starting Debug State . . .")
+		#self.spi.SendStringMessage("Can I\nget\nanother\nPSSC?!")
+		self.spi.SendStringMessage("Let's I\ntry\nthis\nagain")
 		#self.spi.SendMenuChoices("Testing\nHey\nChris\nIt's working!")
 		#self.spi.SendSongInfo("Test Track", "Cody Allen")
-		initializeState = InitializeState(self.resourceManager)
-		firstTrack = initializeState.start()
-		print(firstTrack)
-
-
-
+		#initializeState = InitializeState(self.resourceManager)
+		#firstTrack = initializeState.start()
+		#print(firstTrack)
 

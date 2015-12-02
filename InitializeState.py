@@ -35,6 +35,7 @@ class InitializeState:
 
 			# Send starting options
 			while not response:
+				# !! TEMP CHANGE !! CHANGE BACK !!
 				#response = self.spi.SendMenuChoices(STARTINGOPTIONS)
 				response = raw_input(STARTINGOPTIONS)
 

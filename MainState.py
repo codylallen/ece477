@@ -29,10 +29,14 @@ class MainState:
 			self.poll.DeleteDbEntries(currentSong)
 
 			# Send song title/artist
-			self.spi.SendSongInfo(currentSong, currentTrack.Artist)
+			# !! TEMP ADDITION !! REMOVE !!
+			#self.spi.SendSongInfo(currentSong, currentTrack.Artist)
 
 			# Send song data
-			self.spi.SendSong(currentTrack)
+			# !! TEMP ADDITION !! REMOVE !!
+			#self.spi.SendSong(currentTrack)
+			print("Now playing "  + currentTrack.Title)
+			sleep(5)
 
 			# Remove song just played from database
 			del self.musicDatabase.Tracks[currentSong]

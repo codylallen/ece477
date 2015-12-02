@@ -18,7 +18,7 @@ def Main():
     	debugState = DebugState(resourceManager)
     	debugState.start()
     else:
-    	while(true):
+    	while(True):
             # Call Initalization State
             initializeState = InitializeState(resourceManager)
             firstTrack = initializeState.start()

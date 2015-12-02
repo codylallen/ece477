@@ -47,7 +47,7 @@ GPIO_SENDMESSAGE = 12
 GPIO_RECEIVE = 13
 
 # SPI default speed
-SPI_DEFAULTSPEED = 5000
+SPI_DEFAULTSPEED = 90000
 
 # SPI number of bytes to be received for menu response
 MENURESPONSESIZE = 1

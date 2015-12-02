@@ -3,6 +3,7 @@ from CONSTANTS import *
 import RPi.GPIO as GPIO
 import spidev
 import sys
+from time import *
 
 class SPI():
 
@@ -90,6 +91,7 @@ class SPI():
 	#####################################################################
 
 	def SendStringMessage(self, stringMessage):
+
 		# Create list of int representation of string
 		stringMessageAsInt = map(ord, list(stringMessage))
 
@@ -101,8 +103,14 @@ class SPI():
 			stringMessageAsInt = self.SendBytes(stringMessageAsInt,
 				SPI_DEFAULTSPEED)
 
+		sleep(1)
+
 		# Set GPIO signal back high
 		GPIO.output(GPIO_SENDMESSAGE, True)
+
+		# DELETE THIS SHIT
+		sleep (1)
+		GPIO.output(GPIO_SENDMESSAGE, False)
 
 
 	#####################################################################
